@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NightPulse Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum-deep:#1B1420;
+    --plum-mid:#241A2C;
+    --plum-line:#3A2C42;
+    --amber:#E8A23C;
+    --amber-dim:#8A6226;
+    --rose:#D98A93;
+    --cream:#F4EDE4;
+    --cream-dim:#B8AEB9;
+    --green:#7FB88A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--plum-deep);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(232,162,60,0.10), transparent 45%),
+      radial-gradient(circle at 90% 20%, rgba(217,138,147,0.08), transparent 40%);
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:24px 14px 60px;
+  }
+  .app{width:100%;max-width:420px;}
+
+  .brand{text-align:center;margin-bottom:22px;}
+  .brand .mark{
+    font-family:'Anton',sans-serif;
+    font-size:34px;
+    letter-spacing:1px;
+    color:var(--cream);
+    text-transform:uppercase;
+    line-height:1;
+  }
+  .brand .mark span{color:var(--amber);}
+  .brand .tag{
+    font-size:12px;
+    color:var(--cream-dim);
+    letter-spacing:0.5px;
+    margin-top:4px;
+  }
+
+  .toggle{
+    display:flex;
+    background:var(--plum-mid);
+    border:1px solid var(--plum-line);
+    border-radius:12px;
+    padding:4px;
+    margin-bottom:20px;
+  }
+  .toggle button{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--cream-dim);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    padding:10px 0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .toggle button.active{
+    background:var(--amber);
+    color:var(--plum-deep);
+  }
+
+  .card{
+    background:var(--plum-mid);
+    border:1px solid var(--plum-line);
+    border-radius:18px;
+    padding:20px;
+  }
+
+  /* STAFF VIEW */
+  .bar-name-input{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--plum-line);
+    color:var(--cream);
+    font-family:'Anton',sans-serif;
+    font-size:22px;
+    letter-spacing:0.3px;
+    padding:4px 0 10px;
+    margin-bottom:18px;
+  }
+  .bar-name-input:focus{outline:none;border-bottom-color:var(--amber);}
+  .bar-name-input::placeholder{color:var(--cream-dim);}
+
+  .section-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--amber);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+
+  .crowd-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .crowd-btn{
+    height:64px;
+    border-radius:12px;
+    border:1.5px solid var(--plum-line);
+    background:rgba(255,255,255,0.02);
+    color:var(--cream-dim);
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:all .15s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .crowd-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--cream-dim);}
+  .crowd-btn.selected{
+    border-color:var(--amber);
+    background:rgba(232,162,60,0.12);
+    color:var(--cream);
+  }
+  .crowd-btn.selected .dot{background:var(--amber);box-shadow:0 0 8px var(--amber);}
+
+  .updated-line{
+    font-size:11px;
+    color:var(--cream-dim);
+    margin:10px 0 20px;
+  }
+
+  .divider{height:1px;background:var(--plum-line);margin:18px 0;}
+
+  .field{
+    width:100%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--plum-line);
+    border-radius:10px;
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    padding:11px 12px;
+    margin-bottom:8px;
+  }
+  .field::placeholder{color:var(--cream-dim);}
+  .field:focus{outline:none;border-color:var(--amber);}
+
+  .post-btn{
+    width:100%;
+    background:var(--amber);
+    border:none;
+    border-radius:10px;
+    color:var(--plum-deep);
+    font-weight:800;
+    font-size:14px;
+    padding:12px 0;
+    cursor:pointer;
+    margin-top:4px;
+    transition:opacity .15s ease;
+  }
+  .post-btn:active{opacity:0.8;}
+
+  .staff-post-list{margin-top:16px;}
+  .staff-post{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.02);
+    border:1px solid var(--plum-line);
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:8px;
+    font-size:13px;
+  }
+  .staff-post button{
+    background:none;
+    border:none;
+    color:var(--rose);
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    padding:4px;
+  }
+
+  /* PUBLIC VIEW */
+  .pub-name{
+    font-family:'Anton',sans-serif;
+    font-size:24px;
+    letter-spacing:0.3px;
+    margin-bottom:2px;
+  }
+  .pub-address{font-size:12px;color:var(--cream-dim);margin-bottom:16px;}
+
+  .status-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .status-pill .pulse{
+    width:8px;height:8px;border-radius:50%;
+    animation:pulse 1.6s infinite ease-in-out;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:0.5;transform:scale(1.3);}
+  }
+  .pub-updated{font-size:11px;color:var(--cream-dim);margin-bottom:20px;}
+
+  .pub-empty{
+    font-size:13px;
+    color:var(--cream-dim);
+    font-style:italic;
+    padding:20px 0;
+    text-align:center;
+    border:1px dashed var(--plum-line);
+    border-radius:12px;
+  }
+
+  .pub-post{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--plum-line);
+  }
+  .pub-post:last-child{border-bottom:none;}
+  .pub-post .icon{
+    width:34px;height:34px;
+    border-radius:9px;
+    background:rgba(232,162,60,0.12);
+    color:var(--amber);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;
+    flex-shrink:0;
+  }
+  .pub-post .title{font-size:14px;font-weight:600;}
+  .pub-post .desc{font-size:12px;color:var(--cream-dim);margin-top:2px;}
+
+  .hint{
+    text-align:center;
+    font-size:11px;
+    color:var(--cream-dim);
+    margin-top:16px;
+    line-height:1.5;
+  }
+  .hint b{color:var(--amber);}
+
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="brand">
+    <div class="mark">Night<span>Pulse</span></div>
+    <div class="tag">Know before you go</div>
+  </div>
+
+  <div class="toggle">
+    <button id="tabStaffBtn" class="active" onclick="showTab('staff')">Staff View</button>
+    <button id="tabPublicBtn" onclick="showTab('public')">Public Page</button>
+  </div>
+
+  <!-- STAFF VIEW -->
+  <div id="staffView" class="card">
+    <input id="barNameInput" class="bar-name-input" placeholder="Type your bar's name..." value="The Local Tap Room" oninput="syncDetails()">
+    <input id="barAddressInput" class="field" style="margin-bottom:8px;" placeholder="Type the bar's address..." value="142 Main St" oninput="syncDetails()">
+    <div id="lockRow" style="display:flex; justify-content:flex-end; margin-bottom:18px;">
+      <button id="lockBtn" onclick="toggleLock()" style="background:none; border:none; color:var(--amber); font-size:11px; font-weight:700; letter-spacing:0.3px; cursor:pointer; padding:2px;">🔓 Lock in details</button>
+    </div>
+
+    <div class="section-label">How's it looking right now?</div>
+    <div class="crowd-grid" id="crowdGrid">
+      <button class="crowd-btn" data-level="Quiet" data-color="var(--green)" onclick="setCrowd(this)"><span class="dot"></span>Quiet</button>
+      <button class="crowd-btn" data-level="Moderate" data-color="var(--amber)" onclick="setCrowd(this)"><span class="dot"></span>Moderate</button>
+      <button class="crowd-btn selected" data-level="Busy" data-color="var(--amber)" onclick="setCrowd(this)"><span class="dot"></span>Busy</button>
+      <button class="crowd-btn" data-level="Packed" data-color="var(--rose)" onclick="setCrowd(this)"><span class="dot"></span>Packed</button>
+    </div>
+    <div class="updated-line" id="updatedLine">Updated just now</div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Post an event or deal</div>
+    <input id="postTitle" class="field" placeholder="e.g. Trivia night, 8pm">
+    <input id="postDesc" class="field" placeholder="Short detail (optional)">
+    <button class="post-btn" onclick="addPost()">+ Post to page</button>
+
+    <div class="staff-post-list" id="staffPostList"></div>
+  </div>
+
+  <!-- PUBLIC VIEW -->
+  <div id="publicView" class="card hidden">
+    <div class="pub-name" id="pubName">The Local Tap Room</div>
+    <div class="pub-address" id="pubAddress">142 Main St</div>
+
+    <div class="status-pill" id="statusPill" style="background:rgba(232,162,60,0.14); color:var(--amber);">
+      <span class="pulse" id="statusDot" style="background:var(--amber);"></span>
+      <span id="statusText">Busy right now</span>
+    </div>
+    <div class="pub-updated" id="pubUpdated">Updated just now</div>
+
+    <div id="pubPostList">
+      <div class="pub-empty" id="pubEmpty">Nothing posted yet tonight</div>
+    </div>
+  </div>
+
+  <div class="hint">Tap a crowd level on <b>Staff View</b>, then switch to <b>Public Page</b> — that's exactly what a customer sees, updating live.</div>
+
+</div>
+
+<script>
+let posts = [];
+
+function showTab(tab){
+  document.getElementById('tabStaffBtn').classList.toggle('active', tab==='staff');
+  document.getElementById('tabPublicBtn').classList.toggle('active', tab==='public');
+  document.getElementById('staffView').classList.toggle('hidden', tab!=='staff');
+  document.getElementById('publicView').classList.toggle('hidden', tab!=='public');
+}
+
+function toggleLock(){
+  const nameInput = document.getElementById('barNameInput');
+  const addrInput = document.getElementById('barAddressInput');
+  const btn = document.getElementById('lockBtn');
+  const locked = nameInput.disabled;
+
+  nameInput.disabled = !locked;
+  addrInput.disabled = !locked;
+
+  if(!locked){
+    nameInput.style.opacity = '0.55';
+    addrInput.style.opacity = '0.55';
+    nameInput.style.borderBottomColor = 'var(--plum-line)';
+    btn.innerHTML = '🔒 Locked at setup — tap to unlock';
+    btn.style.color = 'var(--cream-dim)';
+  } else {
+    nameInput.style.opacity = '1';
+    addrInput.style.opacity = '1';
+    btn.innerHTML = '🔓 Lock in details';
+    btn.style.color = 'var(--amber)';
+  }
+}
+function syncDetails(){
+  const name = document.getElementById('barNameInput').value || "Your Bar";
+  const address = document.getElementById('barAddressInput').value || "Address";
+  document.getElementById('pubName').textContent = name;
+  document.getElementById('pubAddress').textContent = address;
+}
+
+function setCrowd(btn){
+  document.querySelectorAll('.crowd-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const level = btn.dataset.level;
+  const color = btn.dataset.color;
+
+  document.getElementById('statusText').textContent = level + " right now";
+  document.getElementById('statusPill').style.background = level==='Quiet' ? 'rgba(127,184,138,0.14)' :
+                                                              level==='Packed' ? 'rgba(217,138,147,0.16)' : 'rgba(232,162,60,0.14)';
+  document.getElementById('statusPill').style.color = color;
+  document.getElementById('statusDot').style.background = color;
+
+  document.getElementById('updatedLine').textContent = "Updated just now";
+  document.getElementById('pubUpdated').textContent = "Updated just now";
+}
+
+function addPost(){
+  const title = document.getElementById('postTitle').value.trim();
+  const desc = document.getElementById('postDesc').value.trim();
+  if(!title) return;
+
+  const post = {title, desc, id: Date.now()};
+  posts.unshift(post);
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postDesc').value = '';
+  renderPosts();
+}
+
+function removePost(id){
+  posts = posts.filter(p=>p.id!==id);
+  renderPosts();
+}
+
+function renderPosts(){
+  const staffList = document.getElementById('staffPostList');
+  const pubList = document.getElementById('pubPostList');
+  const pubEmpty = document.getElementById('pubEmpty');
+
+  staffList.innerHTML = posts.map(p=>
+    `<div class="staff-post"><span>${escapeHtml(p.title)}</span><button onclick="removePost(${p.id})">Remove</button></div>`
+  ).join('');
+
+  if(posts.length===0){
+    pubList.innerHTML = '<div class="pub-empty">Nothing posted yet tonight</div>';
+  } else {
+    pubList.innerHTML = posts.map(p=>
+      `<div class="pub-post"><div class="icon">★</div><div><div class="title">${escapeHtml(p.title)}</div>${p.desc ? `<div class="desc">${escapeHtml(p.desc)}</div>` : ''}</div></div>`
+    ).join('');
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// seed one example post so the demo isn't empty on load
+posts.push({title:"Happy hour til 9pm", desc:"$2 off drafts", id:1});
+renderPosts();
+</script>
+</body>
+</html>
